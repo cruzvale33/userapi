@@ -1,0 +1,531 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "description": "API Documentation",
+      "version": "1.0.0",
+      "title": "STING API User authentication and tasks managment",
+      "contact": {
+        "email": "ingcruzvalerio@gmail.com"
+      },
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "servers": [
+      {
+        "url": "/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Login Request",
+        "description": "API for get or destroy the auth token"
+      },
+      {
+        "name": "User Request",
+        "description": "API for requesting and return users requests"
+      },
+      {
+        "name": "Task Request",
+        "description": "API for requesting and return tasks requests for users"
+      }
+    ],
+    "paths": {
+        "/api/login": {
+            "post": {
+                "summary": "Get auth user token ",
+                "tags": [
+                    "Login Request"
+                ], 
+                "requestBody": {
+                    "description": "Login Request Object",
+                    "required": true,
+                    "content": {
+                    "multipart/form-data": {
+                        "schema": {
+                        "$ref": "#/components/schemas/loginRequests"
+                        }
+                    }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "#/components/schemas/loginResponse"
+                    }
+                    },
+                    "400": {
+                    "description": "Failed. Bad post data."
+                    }
+                }
+            }
+            
+        },
+        "/api/logout": {
+            "post": {
+                "summary": "Destroy auth user token ",
+                "tags": [
+                    "Login Request"
+                ], 
+                "requestBody": {
+                    "description": "User id",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                            "$ref": "#/components/schemas/logoutRequests"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Logout"
+                    
+                    },
+                    "400": {
+                        "description": "Failed. Bad post data."
+                    }
+                }
+            }
+            
+        },
+        "/api/users/{id}": {
+            "parameters": [
+                {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "ID of the user that you want to match",
+                "type": "integer"
+                }
+            ],
+            "get": {
+            "tags": [
+                "User Request"
+            ],
+            "summary": "Returns userRequests",
+            "responses": {
+                "200": {
+                "description": "OK",
+                "schema": {
+                    "$ref": "#/components/schemas/userRequests"
+                }
+                }
+            }
+            }
+        },
+        "/api/users": {
+            "post": {
+                "summary": "Create a new user in the database",
+                "tags": [
+                "User Request"
+                ], 
+                "requestBody": {
+                "description": "User Request Object",
+                "required": true,
+                "content": {
+                    "multipart/form-data": {
+                    "schema": {
+                        "$ref": "#/components/schemas/userRequests"
+                    }
+                    }
+                }
+                },
+                "produces": [
+                "application/json"
+                ],
+                "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                    "$ref": "#/components/schemas/userResponse"
+                    }
+                },
+                "400": {
+                    "description": "Failed. Bad post data."
+                }
+                }
+            },
+            "put": {
+            "summary": "edit an user request by ID",
+            "tags": [
+                "User Request"
+            ],
+            "requestBody": {
+                "description": "User Request Object",
+                "required": true,
+                "content": {
+                "multipart/form-data": {
+                    "schema": {
+                    "$ref": "#/components/schemas/userRequestsEdit"
+                    }
+                }
+                }
+            },
+            "produces": [
+                "application/json"
+            ],
+            "responses": {
+                "200": {
+                "description": "User Updated",
+                },
+                "400": {
+                "description": "Failed. Bad post data."
+                }
+            }
+            },
+            "delete": {
+            "summary": "Delete User Request by ID",
+            "tags": [
+                "User Request"
+            ],
+            "requestBody": {
+                "description": "User Request Object",
+                "required": true,
+                "content": {
+                "multipart/form-data": {
+                    "schema": {
+                    "$ref": "#/components/schemas/delete"
+                    }
+                }
+                }
+            },
+            "responses": {
+                "200": {
+                "description": "User Deleted"
+                },
+                "400": {
+                "description": "Failed. Misunderstood Request."
+                },
+                "404": {
+                "description": "Failed. Book Request not found."
+                }
+            }
+            }
+        },
+        "/api/tasks/{id}": {
+            "parameters": [
+                {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "ID of the task that you want to match",
+                "type": "integer"
+                }
+            ],
+            "get": {
+            "tags": [
+                "Task Request"
+            ],
+            "summary": "Returns taskRequests",
+            "responses": {
+                "200": {
+                "description": "OK",
+                "schema": {
+                    "$ref": "#/components/schemas/taskRequests"
+                }
+                }
+            }
+            }
+        },
+        "/api/tasks": {
+            "post": {
+                "summary": "Create a new task for an user in the database",
+                "tags": [
+                "Task Request"
+                ], 
+                "requestBody": {
+                "description": "Task Request Object",
+                "required": true,
+                "content": {
+                    "multipart/form-data": {
+                    "schema": {
+                        "$ref": "#/components/schemas/taskRequests"
+                    }
+                    }
+                }
+                },
+                "produces": [
+                "application/json"
+                ],
+                "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                    "$ref": "#/components/schemas/taskResponse"
+                    }
+                },
+                "400": {
+                    "description": "Failed. Bad post data."
+                }
+                }
+            },
+            "put": {
+            "summary": "edit a task request by ID",
+            "tags": [
+                "Task Request"
+            ],
+            "requestBody": {
+                "description": "Task Request Object",
+                "required": true,
+                "content": {
+                "multipart/form-data": {
+                    "schema": {
+                    "$ref": "#/components/schemas/taskRequestsEdit"
+                    }
+                }
+                }
+            },
+            "produces": [
+                "application/json"
+            ],
+            "responses": {
+                "200": {
+                "description": "Task Updated"
+                },
+                "400": {
+                "description": "Failed. Bad post data."
+                }
+            }
+            },
+            "delete": {
+            "summary": "Delete Task Request by ID",
+            "tags": [
+                "Task Request"
+            ],
+            "requestBody": {
+                "description": "Task Request Object",
+                "required": true,
+                "content": {
+                "multipart/form-data": {
+                    "schema": {
+                    "$ref": "#/components/schemas/delete"
+                    }
+                }
+                }
+            },
+            "responses": {
+                "200": {
+                "description": "Task Deleted"
+                },
+                "400": {
+                "description": "Failed. Misunderstood Request."
+                },
+                "404": {
+                "description": "Failed. Book Request not found."
+                }
+            }
+            }
+        }
+    },
+    "components": {
+      "schemas": {
+        "userRequests": {
+            "properties": {
+                "user":{
+                    "properties":{
+                        "id": {
+                            "type": "integer"
+                        },
+                        "email": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "password": {
+                            "type": "string",
+                            "format": "string"
+                        },
+                        "full_name": {
+                            "type": "string",
+                            "format": "string"
+                        },
+                        "photo": {
+                            "type": "string",
+                            "format": "base64"
+                        }
+                    }
+                    
+                }
+              
+            }
+          },
+        "userRequestsEdit": {
+            "properties": {
+                "user":{
+                    "properties":{
+                        "id": {
+                            "type": "integer"
+                        },
+                        "email": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "password": {
+                            "type": "string",
+                            "format": "string"
+                        },
+                        "full_name": {
+                            "type": "string",
+                            "format": "string"
+                        },
+                        "photo": {
+                            "type": "string",
+                            "format": "base64"
+                        }
+                    }
+                    
+                },
+                "token": {
+                    "type": "string",
+                    "format":"string"
+                }
+                
+            }
+        },
+        "userResponse": {
+            "properties": {
+                "id": {
+                  "type": "integer"
+                }
+            }
+        },
+        "delete": {
+            "type":"object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "token": {
+                "type": "string"
+              }
+            }
+          },
+        "taskRequests": {
+            "properties": {
+                "task":{
+                    "properties":{
+                        "id": {
+                            "type": "integer"
+                        },
+                        "title": {
+                            "type": "string",
+                            "format": "string"
+                        },
+                        "description": {
+                            "type": "string",
+                            "format": "string"
+                        },
+                        "start_date": {
+                            "type": "string",
+                            "format": "yyyy-mm-dd HH:MM"
+                        },
+                        "due_date": {
+                            "type": "string",
+                            "format": "yyyy-mm-dd HH:MM"
+                        },
+                        "priority": {
+                            "type": "integer"
+                        }
+                    }
+                    
+                },
+                "user_id":{
+                    "type":"integer"
+                },
+                "token":{
+                    "type":"string"
+                }
+              
+            }
+        },
+        "taskResponse": {
+            "properties": {
+                "task_id": {
+                  "type": "integer"
+                }
+            }
+        },
+        "taskRequestsEdit": {
+            "properties": {
+                "task":{
+                    "properties":{
+                        "id": {
+                            "type": "integer"
+                        },
+                        "title": {
+                            "type": "string",
+                            "format": "string"
+                        },
+                        "description": {
+                            "type": "string",
+                            "format": "string"
+                        },
+                        "start_date": {
+                            "type": "string",
+                            "format": "yyyy-mm-dd HH:MM"
+                        },
+                        "due_date": {
+                            "type": "string",
+                            "format": "yyyy-mm-dd HH:MM"
+                        },
+                        "priority": {
+                            "type": "integer"
+                        }
+                    }
+                    
+                },
+                "token": {
+                    "type": "string",
+                    "format":"string"
+                }
+                
+            }
+        },
+        "loginRequests": {
+            "properties": {
+                "user":{
+                    "properties":{
+                        
+                        "email": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "password": {
+                            "type": "string",
+                            "format": "string"
+                        }
+                    }
+                    
+                }
+              
+            }
+          },
+        "loginResponse": {
+            "properties": {
+                "user": {
+                    "type": "integer"
+                },
+                "token":{
+                    "type":"string"
+                }
+            }
+        },
+        "logoutRequests":{
+            "properties":{
+                "id":{
+                    "type":"integer"
+                }
+            }
+        }
+      }
+    }
+  }
