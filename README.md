@@ -26,6 +26,8 @@ Pip install Flask-SQLAlchemy
 
 pip install passlib
 
+pip install Flask-Login
+
 pip install Flask-HTTPAuth
 
 pip install mysqlclient
