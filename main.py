@@ -46,6 +46,7 @@ app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 ### end swagger specific ###
 
 
+#Show the readme.md file content
 @app.route("/")
 def index():
     # You can then reference the file's path relative to the app's path. 
@@ -53,6 +54,7 @@ def index():
     md_template_string = markdown.markdown(readme_file.read(), extensions=["fenced_code"]                                         )
     return md_template_string
 
+#Check if the user and password are valid or is a valid token
 def verify_password(username_or_token, password):
     # first try to authenticate by token
     user = User.verify_auth_token(username_or_token)
@@ -66,11 +68,13 @@ def verify_password(username_or_token, password):
     g.user = user
     return True
 
+#Get the authorization token for the user
 def get_auth_token():
     token = g.user.generate_auth_token()
     return  token.decode('ascii')
 
 
+#This route allows to an user get the auth token
 @app.route('/api/login', methods=['POST'])
 def login():
     user_request = json.loads(request.form.get('user'))
@@ -87,6 +91,7 @@ def login():
     
     return jsonify({'message' : 'Invalid User'})
 
+#Destroy the user auth token 
 @app.route("/api/logout", methods= ['POST'])
 def logout():
     id = request.form.get('id')
@@ -95,6 +100,7 @@ def logout():
     db.session.commit()
     return 'Logout'
 
+#This route allows to check if a token is valid
 @app.route('/api/check-token', methods = ['POST'])
 def check_token():
     token = request.form.get('token')
@@ -102,12 +108,15 @@ def check_token():
         if verify_password(token, None):
             return True
     return False
+
+#Function to remove an user by id
 def delete_user(id):
     user = User.query.filter_by(id = id).first()
     db.session.delete(user)
     db.session.commit()
     return 'User Deleted'
 
+#Function to update an user 
 def update_user(user_request):
     user = User.query.filter_by(id = int(user_request['id'])).first()
     user.photo = user_request['photo'] if user_request['email'] else user.photo
@@ -117,6 +126,9 @@ def update_user(user_request):
     db.session.commit()
 
     return 'User Updated'
+
+#This route allows multiple methods from request POST, PUT, DELETE
+#It is used to create, update or delete an user
 @app.route('/api/users', methods = ['POST', 'DELETE', 'PUT'])
 def users():
     
@@ -142,7 +154,8 @@ def users():
             user_request = json.loads(request.form.get('user'))
             return update_user(user_request)    
         return 'Invalid Token'
-        
+
+#This route use a GET method and return an user structure by id       
 @app.route('/api/users/<int:id>')
 def get_user(id):
     user = User.query.filter_by(id = int(id)).first()
@@ -151,6 +164,8 @@ def get_user(id):
     return jsonify({'id' : user.id,'email' : user.email, 'full_name' : user.full_name, 'photo' : user.photo })
 
 
+#This route allows multiple methods from request POST, PUT, DELETE
+#It is used to create, update or delete tasks for an user
 @app.route('/api/tasks', methods = ['POST', 'DELETE', 'PUT'])
 def tasks():
     if request.method == 'POST':
@@ -192,6 +207,8 @@ def tasks():
 
             return 'Task Updated'
         return 'Invalid Token'
+
+#This route use a GET method and return a task structure by id       
 @app.route('/api/tasks/<int:id>')
 def get_task(id):
     task = Task.query.filter_by(id = int(id)).first()

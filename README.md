@@ -41,6 +41,7 @@ Set the default config to development mode
 
 DATABASE NAME: apiuser (MySql)
 
+On Windows use set instead export
 ```bash
 export FLASK_APP=main.py
 ```
